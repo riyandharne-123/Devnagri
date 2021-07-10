@@ -3,7 +3,11 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 
 import Login from './components/Login'
-import Welcome from'./components/Dashboard/Welcome'
+import Dashboard from'./components/Dashboard/Dashboard'
+import Welcome from './components/Dashboard/Welcome'
+import Users from './components/Dashboard/Users'
+import Roles from './components/Dashboard/Roles'
+import Juniors from './components/Dashboard/Juniors'
 
 Vue.use(VueRouter)
 
@@ -13,14 +17,80 @@ const routes = [
    redirect:'/login',
   },
   {
-    path:'/login',
-    component:Login,
-    name:'Login',
+    path: '/login',
+    component: Login,
+    name: 'Login',
   },
   {
-    path:'/dashboard',
-    component:Welcome,
-    name:'Dashboard',
+    path: '/dashboard',
+    component: Dashboard,
+    name: 'Dashboard',
+    children: [
+      {
+        path: 'welcome',
+        component: Welcome,
+      },
+      {
+        path: 'users',
+        component: Users,
+        beforeEnter: (to,from,next) => {
+          axios.post('/api/verify/permission',{
+            permission_name: 'users'
+          })
+          .then(res => {
+            if(res.data.status == true)
+            {
+              next()
+            }
+            
+            else {
+              next('/dashboard/welcome')
+              alert('Unauthorized!')
+            }
+          })
+        },
+      },
+      {
+        path: 'roles',
+        component: Roles,
+        beforeEnter: (to,from,next) => {
+          axios.post('/api/verify/permission',{
+            permission_name: 'roles'
+          })
+          .then(res => {
+            if(res.data.status == true)
+            {
+              next()
+            }
+            
+            else {
+              next('/dashboard/welcome')
+              alert('Unauthorized!')
+            }
+          })
+        },
+      },
+      {
+        path: 'juniors',
+        component: Juniors,
+        beforeEnter: (to,from,next) => {
+          axios.post('/api/verify/permission',{
+            permission_name: 'juniors'
+          })
+          .then(res => {
+            if(res.data.status == true)
+            {
+              next()
+            }
+            
+            else {
+              next('/dashboard/welcome')
+              alert('Unauthorized!')
+            }
+          })
+        },
+      },
+    ],
     beforeEnter: (to,from,next) => {
       axios.get('/api/verify/user')
       .then(res => {

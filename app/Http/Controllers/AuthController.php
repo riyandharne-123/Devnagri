@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Permission;
 use Auth;
 
 class AuthController extends Controller
@@ -49,5 +50,18 @@ class AuthController extends Controller
     public function verify(Request $request)
     {
       return $request->user()->only('api_token');
+    }
+
+    public function permission(Request $request)
+    {
+        $data = Permission::where('user_id', Auth::user()->id)->where('name', $request->permission_name)->get();
+
+        if(sizeof($data) > 0) {
+            return response()->json(['status' => true], 200);
+        }
+
+        else {
+            return response()->json(['status' => false], 200);
+        }
     }
 }

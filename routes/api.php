@@ -18,4 +18,5 @@ Route::post('/login',[App\Http\Controllers\AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:api']],function(){
     Route::get('/verify/user',[App\Http\Controllers\AuthController::class, 'verify']);
+    Route::post('/verify/permission',[App\Http\Controllers\AuthController::class, 'permission']);
 });

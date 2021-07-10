@@ -1,4 +1,6 @@
 <template>
+    <div class="container">
+    <div class="row" style="padding-top:5%;">
     <div class="col-md-6" style="margin: 0 auto; padding-top:15%;">
         <div class="card">
             <div class="card-body">
@@ -19,6 +21,8 @@
                 </form>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </template>
 
@@ -51,7 +55,7 @@
                     }
 
                     else {
-                        this.$router.push('/dashboard');
+                        this.$router.push('/dashboard/welcome');
                     }
 
                 })
