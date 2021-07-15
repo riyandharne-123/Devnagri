@@ -17,10 +17,19 @@ class UserController extends Controller
      */
     public function index()
     {
+        $data = array();
+
+        $permissions = Permission::where('user_id',Auth::user()->id)->get();
+
+        foreach($permissions as $item)
+        {
+            array_push($data,$item->name);
+        }
+
         return response()->json([
-            'users' => User::sortByDesc('created_at')->with(['role','permissions'])->get(),
-            'roles' => Roles::sortByDesc('created_at')->get(),
-            'permissions' => Permissions::all()
+            'users' => User::with(['role','permissions'])->latest()->get(),
+            'roles' => Role::all(),
+            'permissions' => $data
         ], 200);
     }
 
@@ -43,7 +52,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json([
+            'user' => User::where('id',$id)->with(['role','permissions'])->first(),
+        ], 200);
     }
 
     /**
@@ -55,7 +66,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        User::find($id)->update([
+            'role_id' => $request->role_id
+        ]);
+
+        return response()->json([
+            'user' => User::where('id',$id)->with(['role','permissions'])->first(),
+        ], 200);
     }
 
     /**
@@ -66,6 +83,30 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::find($id)->delete();
+
+        return response()->json([
+            'users' => User::with(['role','permissions'])->latest()->get(),
+        ], 200);
+    }
+
+    public function update_permissions(Request $request)
+    {
+        $data = Permission::where('name',$request->name)->where('user_id',Auth::user()->id)->first();
+
+        if($data == null) {
+            Permission::create([
+                'user_id' => Auth::user()->id,
+                'name' => $request->name
+            ]);
+        }
+
+        else {
+            $data->delete();
+        }
+
+        return response()->json([
+            'permissions' => Permission::where('user_id',Auth::user()->id)->get(),
+        ], 200);
     }
 }

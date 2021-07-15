@@ -28,8 +28,6 @@ class DatabaseSeeder extends Seeder
         Role::create([
             'name' => 'admin',
         ]);
-        
-        \App\Models\Role::factory(10)->create();
-        \App\Models\User::factory(10)->create();
+    
     }
 }

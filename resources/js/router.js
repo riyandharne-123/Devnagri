@@ -6,6 +6,7 @@ import Login from './components/Login'
 import Dashboard from'./components/Dashboard/Dashboard'
 import Welcome from './components/Dashboard/Welcome'
 import Users from './components/Dashboard/Users'
+import User from './components/Dashboard/User'
 import Roles from './components/Dashboard/Roles'
 import Juniors from './components/Dashboard/Juniors'
 
@@ -33,6 +34,26 @@ const routes = [
       {
         path: 'users',
         component: Users,
+        beforeEnter: (to,from,next) => {
+          axios.post('/api/verify/permission',{
+            permission_name: 'users'
+          })
+          .then(res => {
+            if(res.data.status == true)
+            {
+              next()
+            }
+            
+            else {
+              next('/dashboard/welcome')
+              alert('Unauthorized!')
+            }
+          })
+        },
+      },
+      {
+        path: 'user/:id',
+        component: User,
         beforeEnter: (to,from,next) => {
           axios.post('/api/verify/permission',{
             permission_name: 'users'
