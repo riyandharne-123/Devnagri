@@ -2036,10 +2036,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2048,6 +2044,7 @@ __webpack_require__.r(__webpack_exports__);
       permissions: ['users', 'roles', 'juniors'],
       user: [],
       user_permissions: [],
+      user_id: this.$route.params.id,
       role: ''
     };
   },
@@ -2056,29 +2053,38 @@ __webpack_require__.r(__webpack_exports__);
 
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/users/" + this.$route.params.id).then(function (res) {
       _this.user = res.data.user;
-    });
-    axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/users').then(function (res) {
-      _this.roles = res.data.roles;
       _this.user_permissions = res.data.permissions;
+      _this.roles = res.data.roles;
     });
   },
   methods: {
-    updatePermissions: function updatePermissions(permission_name) {
+    addPermissions: function addPermissions(permission_name) {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/users/update_permissions', {
-        name: permission_name
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/permissions', {
+        name: permission_name,
+        user_id: this.user_id
       }).then(function (res) {
         _this2.user_permissions = res.data.permissions;
       });
     },
-    updateUser: function updateUser() {
+    deletePermissions: function deletePermissions(permission_name) {
       var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/permissions/delete', {
+        name: permission_name,
+        user_id: this.user_id
+      }).then(function (res) {
+        _this3.user_permissions = res.data.permissions;
+      });
+    },
+    updateUser: function updateUser() {
+      var _this4 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/users/" + this.$route.params.id, {
         role_id: this.role
       }).then(function (res) {
-        _this3.user = res.data.user;
+        _this4.user = res.data.user;
       });
     }
   }
@@ -2137,11 +2143,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      users: []
+      users: [],
+      roles: [],
+      permissions: [],
+      name: '',
+      email: '',
+      password: '',
+      role_id: '',
+      error: ''
     };
   },
   mounted: function mounted() {
@@ -2149,6 +2231,7 @@ __webpack_require__.r(__webpack_exports__);
 
     axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/users').then(function (res) {
       _this.users = res.data.users;
+      _this.roles = res.data.roles;
     });
   },
   methods: {
@@ -2157,6 +2240,35 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().delete("/api/users/".concat(user_id)).then(function (res) {
         _this2.users = res.data.users;
+      });
+    },
+    addPermissions: function addPermissions(name) {
+      if (this.permissions.indexOf(name) === -1) {
+        this.permissions.push(name);
+      } else {
+        var index = this.permissions.indexOf(name);
+        this.permissions.splice(index, 1);
+      }
+    },
+    addUser: function addUser() {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/users", {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        role_id: this.role_id,
+        permissions: this.permissions
+      }).then(function (res) {
+        _this3.users = res.data.users;
+        $('#AddUserModal').modal('hide');
+        _this3.name = "";
+        _this3.email = "";
+        _this3.password = "";
+        _this3.role_id = "";
+        _this3.permissions = [];
+      })["catch"](function (err) {
+        alert('ERROR');
       });
     }
   }
@@ -38782,113 +38894,136 @@ var render = function() {
     _c("div", { staticClass: "row", staticStyle: { "padding-top": "2%" } }, [
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("h5", [_vm._v("Name: " + _vm._s(_vm.user.name))]),
-            _vm._v(" "),
-            _c("h5", [_vm._v("Email: " + _vm._s(_vm.user.email))]),
-            _vm._v(" "),
-            _c("h5", [_vm._v("Role: " + _vm._s(_vm.user.role.name))]),
-            _vm._v(" "),
-            _c("hr"),
-            _vm._v(" "),
-            _c("h5", [_vm._v("Update Details")]),
-            _vm._v(" "),
-            _c(
-              "form",
-              [
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.role,
-                          expression: "role"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { required: "" },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.role = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    _vm._l(_vm.roles, function(role) {
-                      return _c(
-                        "option",
-                        {
-                          key: role.id,
-                          domProps: {
-                            selected: role.id == _vm.user.role.id,
-                            value: role.id
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c("h5", [_vm._v("Name: " + _vm._s(_vm.user.name))]),
+              _vm._v(" "),
+              _c("h5", [_vm._v("Email: " + _vm._s(_vm.user.email))]),
+              _vm._v(" "),
+              _c("h5", [_vm._v("Role: " + _vm._s(_vm.user.role.name))]),
+              _vm._v(" "),
+              _c("h5", [_vm._v("Permissions")]),
+              _vm._v(" "),
+              _vm._l(_vm.user_permissions, function(item) {
+                return _c("ul", { key: item.id }, [
+                  _c("li", [
+                    _vm._v(_vm._s(item.name) + " "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        on: {
+                          click: function($event) {
+                            return _vm.deletePermissions(item.name)
                           }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                    " +
-                              _vm._s(role.name) +
-                              "\n                                "
-                          )
-                        ]
-                      )
-                    }),
-                    0
-                  )
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.permissions, function(item) {
-                  return _c("div", { key: item, staticClass: "permissions" }, [
-                    _c("div", { staticClass: "form-check" }, [
-                      _c("label", { staticClass: "form-check-label" }, [
-                        _c("input", {
-                          staticClass: "form-check-input",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            checked: _vm.user_permissions.indexOf(item) != -1,
-                            value: item
-                          },
-                          on: {
-                            change: function($event) {
-                              return _vm.updatePermissions(item)
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ])
+                ])
+              }),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _c("h5", [_vm._v("Update Details")]),
+              _vm._v(" "),
+              _c(
+                "form",
+                [
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.role,
+                            expression: "role"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { required: "" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.role = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      _vm._l(_vm.roles, function(role) {
+                        return _c(
+                          "option",
+                          {
+                            key: role.id,
+                            domProps: {
+                              selected: role.id == _vm.user.role.id,
+                              value: role.id
                             }
-                          }
-                        }),
-                        _vm._v(
-                          _vm._s(item) + " \n                                "
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(role.name) +
+                                " \n                                "
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.permissions, function(item) {
+                    return _c("ul", { key: item, staticClass: "permissions" }, [
+                      _c("li", [
+                        _vm._v(_vm._s(item) + " "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.addPermissions(item)
+                              }
+                            }
+                          },
+                          [_vm._v("Add")]
                         )
                       ])
                     ])
-                  ])
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary btn-block",
-                    attrs: { type: "button" },
-                    on: { click: _vm.updateUser }
-                  },
-                  [_vm._v("Update")]
-                )
-              ],
-              2
-            )
-          ])
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-block",
+                      attrs: { type: "button" },
+                      on: { click: _vm.updateUser }
+                    },
+                    [_vm._v("Update")]
+                  )
+                ],
+                2
+              )
+            ],
+            2
+          )
         ])
       ])
     ])
@@ -38929,6 +39064,20 @@ var render = function() {
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: {
+                  "data-toggle": "modal",
+                  "data-target": "#AddUserModal"
+                }
+              },
+              [_vm._v("Add User")]
+            ),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
               _c("table", { staticClass: "table table-bordered" }, [
                 _vm._m(0),
@@ -38982,6 +39131,219 @@ var render = function() {
           ])
         ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "modal", attrs: { id: "AddUserModal" } }, [
+      _c("div", { staticClass: "modal-dialog" }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _vm.error != ""
+              ? _c("div", [
+                  _c("div", { staticClass: "alert alert-success" }, [
+                    _c("strong", [_vm._v(_vm._s(_vm.error))])
+                  ]),
+                  _vm._v(" "),
+                  _c("br")
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.addUser()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.name,
+                        expression: "name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", required: "" },
+                    domProps: { value: _vm.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.name = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", [_vm._v("Email:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.email,
+                        expression: "email"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "email", required: "" },
+                    domProps: { value: _vm.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.email = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", [_vm._v("Password:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.password,
+                        expression: "password"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "password", required: "" },
+                    domProps: { value: _vm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.password = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.role_id,
+                          expression: "role_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { required: "" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.role_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.roles, function(role) {
+                      return _c(
+                        "option",
+                        { key: role.id, domProps: { value: role.id } },
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(role.name) +
+                              " \n                        "
+                          )
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-check" }, [
+                  _c("label", { staticClass: "form-check-label" }, [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox", value: "users" },
+                      on: {
+                        click: function($event) {
+                          return _vm.addPermissions("users")
+                        }
+                      }
+                    }),
+                    _vm._v("users\n                    ")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-check" }, [
+                  _c("label", { staticClass: "form-check-label" }, [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox", value: "users" },
+                      on: {
+                        click: function($event) {
+                          return _vm.addPermissions("roles")
+                        }
+                      }
+                    }),
+                    _vm._v("roles\n                    ")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-check" }, [
+                  _c("label", { staticClass: "form-check-label" }, [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox", value: "users" },
+                      on: {
+                        click: function($event) {
+                          return _vm.addPermissions("juniors")
+                        }
+                      }
+                    }),
+                    _vm._v("juniors\n                    ")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+                  [_vm._v("Add User")]
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(3)
+        ])
+      ])
     ])
   ])
 }
@@ -39000,6 +39362,44 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Actions")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add User")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("×")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h5", [_c("label", [_vm._v("Role:")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-danger",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
     ])
   }
 ]

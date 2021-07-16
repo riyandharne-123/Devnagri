@@ -20,5 +20,6 @@ Route::group(['middleware' => ['auth:api']],function(){
     Route::get('/verify/user',[App\Http\Controllers\AuthController::class, 'verify']);
     Route::post('/verify/permission',[App\Http\Controllers\AuthController::class, 'permission']);
     Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::post('/users/update_permissions',[App\Http\Controllers\UserController::class, 'update_permissions']);
+    Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+    Route::post('/permissions/delete',[App\Http\Controllers\PermissionController::class, 'delete']);
 });
