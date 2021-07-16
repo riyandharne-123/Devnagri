@@ -9,6 +9,8 @@ use App\Models\Permission;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\UserUpdate;
+use Mail;
 use Auth;
 
 class UserController extends Controller
@@ -59,19 +61,33 @@ class UserController extends Controller
             'api_token' => $token,
           ]);
   
-          $user = User::where('email', $request->email)->first();
+          $user = User::where('email', $request->email)->with(['role','permissions'])->get();
+
+          //dd($user[0]);
 
           foreach($request->permissions as $item) {
             Permission::create([
-                'user_id' => $user->id,
+                'user_id' => $user[0]->id,
                 'name' => $item
             ]);
           }
 
-          return response()->json([
+          $user = User::where('email', $request->email)->with(['role','permissions'])->get();
+
+        //sending email
+        $data = [
+        	'user' => $user[0],
+        	'email' => $user[0]->email,
+        ];
+
+        //dd($data);
+        
+        Mail::to($data['email'])->send(new UserUpdate($data));
+
+        return response()->json([
             'users' => User::with(['role','permissions'])->latest()->get(),
-          ], 200);
-  
+        ], 200);
+
         }
     }
 
@@ -102,6 +118,18 @@ class UserController extends Controller
         User::find($id)->update([
             'role_id' => $request->role_id
         ]);
+
+        $user = User::where('id', $id)->with(['role','permissions'])->get();
+
+        //sending email
+        $data = [
+        	'user' => $user[0],
+        	'email' => $user[0]->email,
+        ];
+
+        //dd($data);
+        
+        Mail::to($data['email'])->send(new UserUpdate($data));
 
         return response()->json([
             'user' => User::where('id',$id)->with(['role','permissions'])->first(),
