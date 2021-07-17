@@ -50,4 +50,8 @@ class User extends Authenticatable
     public function permissions() {
         return $this->hasMany(Permission::class, 'user_id');
     }
+
+    public function juniors() {
+        return $this->hasMany(User::class, 'user_id');
+    }
 }
