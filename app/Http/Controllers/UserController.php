@@ -61,26 +61,22 @@ class UserController extends Controller
             'api_token' => $token,
           ]);
   
-          $user = User::where('email', $request->email)->with(['role','permissions'])->get();
+        $new_user = User::where('email', $request->email)->first();
 
-          //dd($user[0]);
-
-          foreach($request->permissions as $item) {
+        foreach($request->permissions as $item) {
             Permission::create([
-                'user_id' => $user[0]->id,
+                'user_id' => $new_user->id,
                 'name' => $item
             ]);
-          }
+        }
 
-          $user = User::where('email', $request->email)->with(['role','permissions'])->get();
+        $user = User::where('email', $request->email)->with(['role','permissions'])->get();
 
         //sending email
         $data = [
         	'user' => $user[0],
         	'email' => $user[0]->email,
         ];
-
-        //dd($data);
         
         Mail::to($data['email'])->send(new UserUpdate($data));
 

@@ -21,5 +21,6 @@ Route::group(['middleware' => ['auth:api']],function(){
     Route::post('/verify/permission',[App\Http\Controllers\AuthController::class, 'permission']);
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+    Route::resource('roles', App\Http\Controllers\RoleController::class);
     Route::post('/permissions/delete',[App\Http\Controllers\PermissionController::class, 'delete']);
 });

@@ -28,6 +28,6 @@ class UserUpdate extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS'))->subject('Account Details')->view('emails.user', ['data' => $this->user_updated_data]);
+        return $this->from('riyandharne@gmail.com')->subject('Account Details')->view('emails.user', ['data' => $this->user_updated_data]);
     }
 }
