@@ -6,7 +6,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\Role;
+use App\Models\Permission;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,6 +28,21 @@ class DatabaseSeeder extends Seeder
 
         Role::create([
             'name' => 'admin',
+        ]);
+
+        Permission::create([
+            'user_id' => 1,
+            'name' => 'users'
+        ]);
+
+        Permission::create([
+            'user_id' => 1,
+            'name' => 'roles'
+        ]);
+
+        Permission::create([
+            'user_id' => 1,
+            'name' => 'juniors'
         ]);
     
     }
