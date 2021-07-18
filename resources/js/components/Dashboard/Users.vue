@@ -77,17 +77,17 @@
                     </div>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" @click="addPermissions('users')" class="form-check-input" value="users">users
+                            <input type="checkbox" @change="addPermissions('users')" class="form-check-input" value="users">users
                         </label>
                     </div>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" @click="addPermissions('roles')" class="form-check-input" value="users">roles
+                            <input type="checkbox" @change="addPermissions('roles')" class="form-check-input" value="users">roles
                         </label>
                     </div>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" @click="addPermissions('juniors')" class="form-check-input" value="users">juniors
+                            <input type="checkbox" @change="addPermissions('juniors')" class="form-check-input" value="users">juniors
                         </label>
                     </div>
                     <button class="btn btn-primary" type="submit">Add User</button>

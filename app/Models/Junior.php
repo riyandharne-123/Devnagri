@@ -15,6 +15,6 @@ class Junior extends Model
     ];
 
     public function user() {
-        return $this->hasOne(User::class, 'id' ,'user_id');
+        return $this->hasOne(User::class, 'id' ,'junior_id');
     }
 }

@@ -1927,6 +1927,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -1941,8 +1970,25 @@ __webpack_require__.r(__webpack_exports__);
     axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/juniors').then(function (res) {
       _this.my_juniors = res.data.my_juniors;
       _this.juniors = res.data.juniors;
-      console.log(_this.my_juniors);
     });
+  },
+  methods: {
+    createJunior: function createJunior(id) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/juniors', {
+        junior_id: id
+      }).then(function (res) {
+        _this2.my_juniors = res.data.my_juniors;
+      });
+    },
+    deleteJunior: function deleteJunior(id) {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().delete("/api/juniors/".concat(id)).then(function (res) {
+        _this3.my_juniors = res.data.my_juniors;
+      });
+    }
   }
 });
 
@@ -38813,6 +38859,10 @@ var render = function() {
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
+            _c("h5", [_vm._v("My Juniors")]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
               _c("table", { staticClass: "table table-bordered" }, [
                 _vm._m(0),
@@ -38821,9 +38871,9 @@ var render = function() {
                   "tbody",
                   _vm._l(_vm.my_juniors, function(item) {
                     return _c("tr", { key: item.id }, [
-                      _c("td", [_vm._v(_vm._s(item.name))]),
+                      _c("td", [_vm._v(_vm._s(item.user.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.email))]),
+                      _c("td", [_vm._v(_vm._s(item.user.email))]),
                       _vm._v(" "),
                       _c("td", [
                         _c(
@@ -38846,12 +38896,69 @@ var render = function() {
               ])
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h5", [_vm._v("Users")]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive" }, [
+              _c("table", { staticClass: "table table-bordered" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.juniors, function(item) {
+                    return _c("tr", { key: item.id }, [
+                      _c("td", [_vm._v(_vm._s(item.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.email))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success",
+                            on: {
+                              click: function($event) {
+                                return _vm.createJunior(item.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Add")]
+                        )
+                      ])
+                    ])
+                  }),
+                  0
+                )
+              ])
+            ])
+          ])
         ])
       ])
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -39549,7 +39656,7 @@ var render = function() {
                       staticClass: "form-check-input",
                       attrs: { type: "checkbox", value: "users" },
                       on: {
-                        click: function($event) {
+                        change: function($event) {
                           return _vm.addPermissions("users")
                         }
                       }
@@ -39564,7 +39671,7 @@ var render = function() {
                       staticClass: "form-check-input",
                       attrs: { type: "checkbox", value: "users" },
                       on: {
-                        click: function($event) {
+                        change: function($event) {
                           return _vm.addPermissions("roles")
                         }
                       }
@@ -39579,7 +39686,7 @@ var render = function() {
                       staticClass: "form-check-input",
                       attrs: { type: "checkbox", value: "users" },
                       on: {
-                        click: function($event) {
+                        change: function($event) {
                           return _vm.addPermissions("juniors")
                         }
                       }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Junior;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -16,8 +17,8 @@ class JuniorController extends Controller
     public function index()
     {
         return response()->json([
-            'my_juniors' => Junior::where('user_id', Auth::user()->id)->latest()->get(),
-            'juniors' => Junior::latest()->get(),
+            'my_juniors' => Junior::where('user_id', Auth::user()->id)->with('user')->latest()->get(),
+            'juniors' => User::latest()->get(),
         ], 200);
     }
 
@@ -39,7 +40,14 @@ class JuniorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Junior::updateOrCreate([
+            'user_id' => Auth::user()->id,
+            'junior_id' => $request->junior_id
+        ]);
+
+        return response()->json([
+            'my_juniors' => Junior::where('user_id', Auth::user()->id)->with('user')->latest()->get(),
+        ], 200);
     }
 
     /**
@@ -82,8 +90,13 @@ class JuniorController extends Controller
      * @param  \App\Models\Junior  $junior
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Junior $junior)
+    public function destroy($id)
     {
-        //
+
+        Junior::find($id)->delete();
+
+        return response()->json([
+            'my_juniors' => Junior::where('user_id', Auth::user()->id)->with('user')->latest()->get(),
+        ], 200);
     }
 }
