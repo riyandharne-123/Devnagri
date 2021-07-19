@@ -2409,7 +2409,8 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         var index = this.permissions.indexOf(name);
         this.permissions.splice(index, 1);
-      }
+      } //console.log(this.permissions)
+
     },
     addUser: function addUser() {
       var _this3 = this;
@@ -2427,7 +2428,6 @@ __webpack_require__.r(__webpack_exports__);
         _this3.email = "";
         _this3.password = "";
         _this3.role_id = "";
-        _this3.permissions = [];
       })["catch"](function (err) {
         alert('ERROR');
       });

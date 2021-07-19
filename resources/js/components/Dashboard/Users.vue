@@ -144,6 +144,8 @@ export default {
                 let index = this.permissions.indexOf(name);
                 this.permissions.splice(index, 1)
             }
+
+            //console.log(this.permissions)
         }, 
         addUser() {
             axios.post(`/api/users`,{
@@ -160,7 +162,6 @@ export default {
                     this.email = ""
                     this.password = ""
                     this.role_id = ""
-                    this.permissions = []
                 })
                 .catch(err =>{
                     alert('ERROR');
